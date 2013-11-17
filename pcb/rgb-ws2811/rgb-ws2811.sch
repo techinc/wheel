@@ -29,9 +29,8 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:led
 LIBS:led_rgb
-LIBS:smd-special
+LIBS:rgb-ws2811-5mm-cache
 EELAYER 24 0
 EELAYER END
 $Descr A4 11693 8268
@@ -84,7 +83,7 @@ L R R2
 U 1 1 5288BA6F
 P 6700 3850
 F 0 "R2" V 6780 3850 40  0000 C CNN
-F 1 "2.7K" V 6707 3851 40  0000 C CNN
+F 1 "100/2.7K" V 6707 3851 40  0000 C CNN
 F 2 "" V 6630 3850 30  0000 C CNN
 F 3 "" H 6700 3850 30  0000 C CNN
 	1    6700 3850
@@ -146,44 +145,6 @@ F 3 "" H 4350 4300 60  0000 C CNN
 	1    4350 4300
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	6150 3850 6450 3850
-Wire Wire Line
-	6150 4050 6450 4050
-Wire Wire Line
-	5350 3850 5050 3850
-Wire Wire Line
-	6300 3250 6300 3050
-Wire Wire Line
-	5350 4150 5150 4150
-Wire Wire Line
-	5150 4150 5150 4300
-Wire Wire Line
-	4150 3850 4400 3850
-Wire Wire Line
-	4400 3850 4400 4050
-Wire Wire Line
-	4400 4050 5350 4050
-Wire Wire Line
-	4150 4150 5050 4150
-Wire Wire Line
-	5050 4150 5050 3950
-Wire Wire Line
-	5050 3950 5350 3950
-Wire Wire Line
-	4150 4000 4550 4000
-Wire Wire Line
-	4550 4000 4550 3850
-Wire Wire Line
-	4150 4300 4150 4450
-Wire Wire Line
-	4150 4450 7150 4450
-Wire Wire Line
-	7150 4450 7150 3850
-Wire Wire Line
-	7150 3850 6950 3850
-Wire Wire Line
-	4350 4300 4150 4300
 $Comp
 L CONN_2 P1
 U 1 1 5288C12F
@@ -195,12 +156,6 @@ F 3 "" H 7700 4050 60  0000 C CNN
 	1    7700 4050
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7350 3950 7350 4050
-Wire Wire Line
-	7350 4050 6950 4050
-Wire Wire Line
-	7350 4150 6150 4150
 $Comp
 L VCC #PWR04
 U 1 1 5288C2BB
@@ -245,9 +200,6 @@ F 3 "" H 5100 4850 60  0000 C CNN
 	1    5100 4850
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6300 3650 6300 3850
-Connection ~ 6300 3850
 $Comp
 L VCC #PWR08
 U 1 1 5288C34E
@@ -259,6 +211,87 @@ F 3 "" H 6150 3650 60  0000 C CNN
 	1    6150 3650
 	1    0    0    -1  
 $EndComp
+$Comp
+L RGBLED-GB+R D2
+U 1 1 5288E0AD
+P 5150 2700
+F 0 "D2" H 5150 1950 60  0000 C CNN
+F 1 "RGBLED-GB+R" H 5150 2700 60  0000 C CNN
+F 2 "" H 5200 2650 60  0000 C CNN
+F 3 "" H 5200 2650 60  0000 C CNN
+	1    5150 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 3850 6450 3850
+Wire Wire Line
+	6150 4050 6450 4050
+Wire Wire Line
+	5350 3850 5050 3850
+Wire Wire Line
+	6300 3250 6300 3050
+Wire Wire Line
+	5350 4150 5150 4150
+Wire Wire Line
+	5150 4150 5150 4300
+Wire Wire Line
+	4150 3850 4400 3850
+Wire Wire Line
+	4400 3850 4400 4050
+Wire Wire Line
+	4400 4050 5350 4050
+Wire Wire Line
+	4150 4150 5050 4150
+Wire Wire Line
+	5050 4150 5050 3950
+Wire Wire Line
+	5050 3950 5350 3950
+Wire Wire Line
+	4150 4000 4550 4000
+Wire Wire Line
+	4550 4000 4550 3850
+Wire Wire Line
+	4150 4300 4150 4450
+Wire Wire Line
+	4150 4450 7150 4450
+Wire Wire Line
+	7150 4450 7150 2850
+Wire Wire Line
+	7150 3850 6950 3850
+Wire Wire Line
+	4350 4300 4150 4300
+Wire Wire Line
+	7350 3950 7350 4050
+Wire Wire Line
+	7350 4050 6950 4050
+Wire Wire Line
+	7350 4150 6150 4150
+Wire Wire Line
+	6300 3650 6300 3850
+Connection ~ 6300 3850
 Wire Wire Line
 	6150 3650 6150 3850
+Wire Wire Line
+	5350 3850 5350 3350
+Wire Wire Line
+	5050 3350 5050 3550
+Wire Wire Line
+	5050 3550 5250 3550
+Wire Wire Line
+	5250 3550 5250 4050
+Connection ~ 5250 4050
+Wire Wire Line
+	4900 3350 4900 3600
+Wire Wire Line
+	4900 3600 5150 3600
+Wire Wire Line
+	5150 3600 5150 3950
+Connection ~ 5150 3950
+Wire Wire Line
+	5200 3350 5900 3350
+Wire Wire Line
+	5900 3350 5900 2850
+Wire Wire Line
+	5900 2850 7150 2850
+Connection ~ 7150 3850
 $EndSCHEMATC
