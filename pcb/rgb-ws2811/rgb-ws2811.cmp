@@ -1,0 +1,52 @@
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 17 Nov 2013 02:48:58 PM CET
+
+BeginCmp
+TimeStamp = /5288BA92;
+Reference = C1;
+ValeurCmp = 104;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288BA4C;
+Reference = D1;
+ValeurCmp = RGBSTRIP+GRB12V;
+IdModule  = PIN_ARRAY_4x1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288C12F;
+Reference = P1;
+ValeurCmp = CONN_2;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288BABA;
+Reference = R1;
+ValeurCmp = RR;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288BA6F;
+Reference = R2;
+ValeurCmp = 2.7K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288B9FF;
+Reference = R3;
+ValeurCmp = 33;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5288B9F0;
+Reference = U1;
+ValeurCmp = WS2811;
+IdModule  = SSOP8;
+EndCmp
+
+EndListe
