@@ -3,7 +3,7 @@
 #define DATA_PIN 12
 #define CLOCK_PIN 11
 
-#define BRIGHTNESS  100
+#define BRIGHTNESS  50
 #define FRAMES_PER_SECOND 60
 
 #define NUM_LEDS    (11+11+11+11+11)
@@ -86,8 +86,7 @@ void loop()
 
   //Fire2012WithPalette(east); // run simulation frame, using palette colors
   //Fire2012WithPalette(south); // run simulation frame, using palette colors
-  Cylon(northeast);
-  Cylon(south);
+  Cylon();
   
   FastLED.show(); // display this frame
   FastLED.delay(1000 / FRAMES_PER_SECOND);
@@ -163,28 +162,44 @@ void Fire2012WithPalette(CRGB* spoke)
     }
 }
 
-void Cylon(CRGB* spoke) { 
+void Cylon() { 
 	// First slide the led in one direction
 	for(int i = 0; i < SPOKE_LENGTH; i++) {
 		// Set the i'th led to red 
-		spoke[i] = CRGB::Red;
+		north[i] = CRGB::Red;
+		northeast[i] = CRGB::Red;
+		east[i] = CRGB::Red;
+		southeast[i] = CRGB::Red;
+		south[i] = CRGB::Red;
 		// Show the leds
 		FastLED.show();
 		// now that we've shown the leds, reset the i'th led to black
-		spoke[i] = CRGB::Black;
+		north[i] = CRGB::Black;
+		northeast[i] = CRGB::Black;
+		east[i] = CRGB::Black;
+		southeast[i] = CRGB::Black;
+		south[i] = CRGB::Black;
 		// Wait a little bit before we loop around and do it again
-		delay(30);
+		delay(100);
 	}
 
 	// Now go in the other direction.  
 	for(int i = SPOKE_LENGTH-1; i >= 0; i--) {
 		// Set the i'th led to red 
-		spoke[i] = CRGB::Red;
+		north[i] = CRGB::Red;
+		northeast[i] = CRGB::Red;
+		east[i] = CRGB::Red;
+		southeast[i] = CRGB::Red;
+		south[i] = CRGB::Red;
 		// Show the leds
 		FastLED.show();
 		// now that we've shown the leds, reset the i'th led to black
-		spoke[i] = CRGB::Black;
+		north[i] = CRGB::Black;
+		northeast[i] = CRGB::Black;
+		east[i] = CRGB::Black;
+		southeast[i] = CRGB::Black;
+		south[i] = CRGB::Black;
 		// Wait a little bit before we loop around and do it again
-		delay(30);
+		delay(100);
 	}
 }
