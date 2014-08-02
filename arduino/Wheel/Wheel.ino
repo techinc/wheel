@@ -1,13 +1,15 @@
 #include <FastLED.h>
 
+// Adapted from Cylon, and Fire2012-with-colorpallette
+
 #define DATA_PIN 12
 #define CLOCK_PIN 11
 
-#define BRIGHTNESS  50
-#define FRAMES_PER_SECOND 60
+#define BRIGHTNESS  255
+#define FRAMES_PER_SECOND 60  // was 60
 
-#define NUM_LEDS    (11+11+11+11+11)
-#define SPOKE_LENGTH 11
+#define NUM_LEDS    (5+5+5+5+5+5+5+5)
+#define SPOKE_LENGTH 5
 #define STARTS_AT(N) (&(leds[N]))
 
 CRGB leds[NUM_LEDS];
@@ -16,35 +18,17 @@ CRGB* northeast=STARTS_AT(SPOKE_LENGTH);
 CRGB* east=STARTS_AT(2*SPOKE_LENGTH);
 CRGB* southeast=STARTS_AT(3*SPOKE_LENGTH);
 CRGB* south=STARTS_AT(4*SPOKE_LENGTH);
-
-// Fire2012 with programmable Color Palette
-//
-// This code is the same fire simulation as the original "Fire2012",
-// but each heat cell's temperature is translated to color through a FastLED
-// programmable color palette, instead of through the "HeatColor(...)" function.
-//
-// Four different static color palettes are provided here, plus one dynamic one.
-// 
-// The three static ones are: 
-//   1. the FastLED built-in HeatColors_p -- this is the default, and it looks
-//      pretty much exactly like the original Fire2012.
-//
-//  To use any of the other palettes below, just "uncomment" the corresponding code.
-//
-//   2. a gradient from black to red to yellow to white, which is
-//      visually similar to the HeatColors_p, and helps to illustrate
-//      what the 'heat colors' palette is actually doing,
-//   3. a similar gradient, but in blue colors rather than red ones,
-//      i.e. from black to blue to aqua to white, which results in
-//      an "icy blue" fire effect,
-//   4. a simplified three-step gradient, from black to red to white, just to show
-//      that these gradients need not have four components; two or
-//      three are possible, too, even if they don't look quite as nice for fire.
-//
-// The dynamic palette shows how you can change the basic 'hue' of the
-// color palette every time through the loop, producing "rainbow fire".
+CRGB* southwest=STARTS_AT(5*SPOKE_LENGTH);
+CRGB* west=STARTS_AT(6*SPOKE_LENGTH);
+CRGB* northwest=STARTS_AT(7*SPOKE_LENGTH);
 
 CRGBPalette16 gPal;
+
+CRGBPalette16 currentPalette;
+TBlendType    currentBlending;
+
+extern CRGBPalette16 myRedWhiteBluePalette;
+extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
 void setup() {
   delay(3000); // sanity delay
@@ -65,72 +49,52 @@ void setup() {
   // Third, here's a simpler, three-step gradient, from black to red to white
   //   gPal = CRGBPalette16( CRGB::Black, CRGB::Red, CRGB::White);
 
+ 
+  currentPalette = RainbowColors_p;
+  currentBlending = BLEND;
+
 }
 
 void loop()
 {
+  // Knight rider
+  Cylon();
+
+  // Fire fire fire
+
   // Add entropy to random number generator; we use a lot of it.
   random16_add_entropy( random());
 
-  // Fourth, the most sophisticated: this one sets up a new palette every
-  // time through the loop, based on a hue that changes every time.
-  // The palette is a gradient from black, to a dark color based on the hue,
-  // to a light color based on the hue, to white.
-  //
-  //   static uint8_t hue = 0;
-  //   hue++;
-  //   CRGB darkcolor  = CHSV(hue,255,192); // pure hue, three-quarters brightness
-  //   CRGB lightcolor = CHSV(hue,128,255); // half 'whitened', full brightness
-  //   gPal = CRGBPalette16( CRGB::Black, darkcolor, lightcolor, CRGB::White);
+//  Fire2012WithPalette(north); // run simulation frame, using palette colors
+//  Fire2012WithPalette(northeast); // run simulation frame, using palette colors
+//  Fire2012WithPalette(east); // run simulation frame, using palette colors
+//  Fire2012WithPalette(southeast); // run simulation frame, using palette colors
+//  Fire2012WithPalette(south); // run simulation frame, using palette colors
+//  Fire2012WithPalette(southwest); // run simulation frame, using palette colors
+//  Fire2012WithPalette(west); // run simulation frame, using palette colors
+//  Fire2012WithPalette(northwest); // run simulation frame, using palette colors
 
+  // Rainbow glow stuff
+//  ChangePalettePeriodically();
+//  static uint8_t startIndex = 0;
+//  startIndex = startIndex + 1; /* motion speed */
+//  FillLEDsFromPaletteColors( startIndex);
 
-  //Fire2012WithPalette(east); // run simulation frame, using palette colors
-  //Fire2012WithPalette(south); // run simulation frame, using palette colors
-  Cylon();
-  
   FastLED.show(); // display this frame
   FastLED.delay(1000 / FRAMES_PER_SECOND);
 }
 
 
 // Fire2012 by Mark Kriegsman, July 2012
-// as part of "Five Elements" shown here: http://youtu.be/knWiGsmgycY
-//// 
-// This basic one-dimensional 'fire' simulation works roughly as follows:
-// There's a underlying array of 'heat' cells, that model the temperature
-// at each point along the line.  Every cycle through the simulation, 
-// four steps are performed:
-//  1) All cells cool down a little bit, losing heat to the air
-//  2) The heat from each cell drifts 'up' and diffuses a little
-//  3) Sometimes randomly new 'sparks' of heat are added at the bottom
-//  4) The heat from each cell is rendered as a color into the leds array
-//     The heat-to-color mapping uses a black-body radiation approximation.
-//
-// Temperature is in arbitrary units from 0 (cold black) to 255 (white hot).
-//
-// This simulation scales it self a bit depending on NUM_LEDS; it should look
-// "OK" on anywhere from 20 to 100 LEDs without too much tweaking. 
-//
-// I recommend running this simulation at anywhere from 30-100 frames per second,
-// meaning an interframe delay of about 10-35 milliseconds.
-//
-// Looks best on a high-density LED setup (60+ pixels/meter).
-//
-//
-// There are two main parameters you can play with to control the look and
-// feel of your fire: COOLING (used in step 1 above), and SPARKING (used
-// in step 3 above).
-//
 // COOLING: How much does the air cool as it rises?
 // Less cooling = taller flames.  More cooling = shorter flames.
 // Default 55, suggested range 20-100 
-#define COOLING  55
+#define COOLING  2
 
 // SPARKING: What chance (out of 255) is there that a new spark will be lit?
 // Higher chance = more roaring fire.  Lower chance = more flickery fire.
 // Default 120, suggested range 50-200.
-#define SPARKING 20
-
+#define SPARKING 10
 
 void Fire2012WithPalette(CRGB* spoke)
 {
@@ -171,6 +135,9 @@ void Cylon() {
 		east[i] = CRGB::Red;
 		southeast[i] = CRGB::Red;
 		south[i] = CRGB::Red;
+		southwest[i] = CRGB::Red;
+		west[i] = CRGB::Red;
+		northwest[i] = CRGB::Red;
 		// Show the leds
 		FastLED.show();
 		// now that we've shown the leds, reset the i'th led to black
@@ -179,6 +146,9 @@ void Cylon() {
 		east[i] = CRGB::Black;
 		southeast[i] = CRGB::Black;
 		south[i] = CRGB::Black;
+		southwest[i] = CRGB::Black;
+		west[i] = CRGB::Black;
+		northwest[i] = CRGB::Black;
 		// Wait a little bit before we loop around and do it again
 		delay(100);
 	}
@@ -191,6 +161,9 @@ void Cylon() {
 		east[i] = CRGB::Red;
 		southeast[i] = CRGB::Red;
 		south[i] = CRGB::Red;
+		southwest[i] = CRGB::Red;
+		west[i] = CRGB::Red;
+		northwest[i] = CRGB::Red;
 		// Show the leds
 		FastLED.show();
 		// now that we've shown the leds, reset the i'th led to black
@@ -199,7 +172,118 @@ void Cylon() {
 		east[i] = CRGB::Black;
 		southeast[i] = CRGB::Black;
 		south[i] = CRGB::Black;
+		southwest[i] = CRGB::Black;
+		west[i] = CRGB::Black;
+		northwest[i] = CRGB::Black;
 		// Wait a little bit before we loop around and do it again
 		delay(100);
 	}
 }
+
+// ColorPallete rainbow stuff
+
+void FillLEDsFromPaletteColors( uint8_t colorIndex)
+{
+  uint8_t brightness = 255;
+  
+  for( int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+    colorIndex += 3;
+  }
+}
+
+
+// There are several different palettes of colors demonstrated here.
+//
+// FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
+// OceanColors_p, CloudColors_p, LavaColors_p, ForestColors_p, and PartyColors_p.
+//
+// Additionally, you can manually define your own color palettes, or you can write
+// code that creates color palettes on the fly.  All are shown here.
+
+void ChangePalettePeriodically()
+{
+  uint8_t secondHand = (millis() / 1000) % 60;
+  static uint8_t lastSecond = 99;
+  
+  if( lastSecond != secondHand) {
+    lastSecond = secondHand;
+    if( secondHand ==  0)  { currentPalette = RainbowColors_p;         currentBlending = BLEND; }
+    if( secondHand == 10)  { currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND;  }
+    if( secondHand == 15)  { currentPalette = RainbowStripeColors_p;   currentBlending = BLEND; }
+    if( secondHand == 20)  { SetupPurpleAndGreenPalette();             currentBlending = BLEND; }
+    if( secondHand == 25)  { SetupTotallyRandomPalette();              currentBlending = BLEND; }
+    if( secondHand == 30)  { SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND; }
+    if( secondHand == 35)  { SetupBlackAndWhiteStripedPalette();       currentBlending = BLEND; }
+    if( secondHand == 40)  { currentPalette = CloudColors_p;           currentBlending = BLEND; }
+    if( secondHand == 45)  { currentPalette = PartyColors_p;           currentBlending = BLEND; }
+    if( secondHand == 50)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND;  }
+    if( secondHand == 55)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = BLEND; }
+  }
+}
+
+// This function fills the palette with totally random colors.
+void SetupTotallyRandomPalette()
+{
+  for( int i = 0; i < 16; i++) {
+    currentPalette[i] = CHSV( random8(), 255, random8());
+  }
+}
+
+// This function sets up a palette of black and white stripes,
+// using code.  Since the palette is effectively an array of
+// sixteen CRGB colors, the various fill_* functions can be used
+// to set them up.
+void SetupBlackAndWhiteStripedPalette()
+{
+  // 'black out' all 16 palette entries...
+  fill_solid( currentPalette, 16, CRGB::Black);
+  // and set every fourth one to white.
+  currentPalette[0] = CRGB::White;
+  currentPalette[4] = CRGB::White;
+  currentPalette[8] = CRGB::White;
+  currentPalette[12] = CRGB::White;
+
+}
+
+// This function sets up a palette of purple and green stripes.
+void SetupPurpleAndGreenPalette()
+{
+  CRGB purple = CHSV( HUE_PURPLE, 255, 255);
+  CRGB green  = CHSV( HUE_GREEN, 255, 255);
+  CRGB black  = CRGB::Black;
+  
+  currentPalette = CRGBPalette16( 
+    green,  green,  black,  black,
+    purple, purple, black,  black,
+    green,  green,  black,  black,
+    purple, purple, black,  black );
+}
+
+
+// This example shows how to set up a static color palette
+// which is stored in PROGMEM (flash), which is almost always more 
+// plentiful than RAM.  A static PROGMEM palette like this
+// takes up 64 bytes of flash.
+const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
+{
+  CRGB::Red,
+  CRGB::Gray, // 'white' is too bright compared to red and blue
+  CRGB::Blue,
+  CRGB::Black,
+
+  CRGB::Red,
+  CRGB::Gray,
+  CRGB::Blue,
+  CRGB::Black,
+
+  CRGB::Red,
+  CRGB::Red,
+  CRGB::Gray,
+  CRGB::Gray,
+  CRGB::Blue,
+  CRGB::Blue,
+  CRGB::Black,
+  CRGB::Black
+};
+
